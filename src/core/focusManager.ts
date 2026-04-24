@@ -94,6 +94,7 @@ export const setActiveElement = (elm: ElementNode) => {
 };
 
 let focusPath: ElementNode[] = [];
+export const getFocusPath = (): ElementNode[] => focusPath;
 const updateFocusPath = (
   currentFocusedElm: ElementNode,
   prevFocusedElm: ElementNode | undefined,

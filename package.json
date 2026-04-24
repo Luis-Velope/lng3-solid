@@ -18,6 +18,13 @@
         "default": "./dist/src/primitives/index.js"
       }
     },
+    "./automation": {
+      "@lightningtv/source": "./src/automation/index.ts",
+      "import": {
+        "types": "./dist/src/automation/index.d.ts",
+        "default": "./dist/src/automation/index.js"
+      }
+    },
     "./devtools": {
       "@lightningtv/source": "./src/devtools/index.ts",
       "import": {

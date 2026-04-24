@@ -59,3 +59,4 @@
   - [Legacy Devices](/deploy/legacy.md)
 - Tooling
   - [Solid Devtools](/tools/solid_devtools.md)
+  - [Automation Bridge](/tools/automation_bridge.md)
