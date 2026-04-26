@@ -32,6 +32,7 @@ import {
   logRenderTree,
   isFunction,
   spliceItem,
+  type AnyNode,
 } from './utils.js';
 import { Config, DOM_RENDERING, isDev, SHADERS_ENABLED } from './config.js';
 import type {
@@ -793,10 +794,7 @@ export class ElementNode extends Object {
     return this._fontFamily;
   }
 
-  insertChild(
-    node: ElementNode | ElementText | TextNode,
-    beforeNode?: ElementNode | ElementText | TextNode | null,
-  ) {
+  insertChild(node: AnyNode, beforeNode?: AnyNode | null) {
     // always remove nodes if they have a parent - for back swap of node
     // this will then put the node at the end of the array when re-added
     if (node.parent) {
@@ -822,7 +820,7 @@ export class ElementNode extends Object {
     this.children.push(node as ElementNode);
   }
 
-  removeChild(node: ElementNode | ElementText | TextNode) {
+  removeChild(node: AnyNode) {
     if (spliceItem(this.children, node, 1) > -1) {
       node.onRemove?.call(node, node);
       if (this.requiresLayout()) {

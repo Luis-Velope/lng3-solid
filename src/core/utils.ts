@@ -4,15 +4,13 @@ import type { Styles, ElementText, TextNode } from './intrinsicTypes.js';
 import { ElementNode } from './elementNode.js';
 import { NodeType } from './nodeTypes.js';
 
+export type AnyNode = ElementNode | ElementText | TextNode;
+
 function hasDebug(node: any) {
   return isObject(node) && node.debug;
 }
 
-export function log(
-  msg: string,
-  node: ElementNode | ElementText | TextNode,
-  ...args: any[]
-) {
+export function log(msg: string, node: AnyNode, ...args: any[]) {
   if (isDev) {
     if (Config.debug || hasDebug(node) || hasDebug(args[0])) {
       console.log(msg, node, ...args);
@@ -56,15 +54,11 @@ export function isElementNode(node: unknown): node is ElementNode {
   return node instanceof ElementNode;
 }
 
-export function isElementText(
-  node: ElementNode | ElementText | TextNode,
-): node is ElementText {
+export function isElementText(node: AnyNode): node is ElementText {
   return node._type === NodeType.TextNode;
 }
 
-export function isTextNode(
-  node: ElementNode | ElementText | TextNode,
-): node is TextNode {
+export function isTextNode(node: AnyNode): node is TextNode {
   return node._type === NodeType.Text;
 }
 

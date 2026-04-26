@@ -1,4 +1,3 @@
-import { getFocusPath as getFocusPathFromCore } from '../core/focusManager.js';
 import type { ElementNode } from '../core/index.js';
 import { getElementType } from './elementType.js';
 import { findInAncestors, getFocusHostMetadata } from './focusHostMetadata.js';
@@ -9,6 +8,17 @@ import type {
   FocusedElementInfo,
   SerializedFocusNode,
 } from './types.js';
+
+let _coreFocusPathFn: (() => ElementNode[]) | undefined;
+import('../core/focusManager.js')
+  .then((mod) => {
+    _coreFocusPathFn = mod.getFocusPath;
+  })
+  .catch(() => {});
+
+function defaultGetFocusPath(): ElementNode[] {
+  return _coreFocusPathFn ? _coreFocusPathFn() : [];
+}
 
 const GLOBAL_AUTOMATION_KEY = '__lightningAutomation';
 
@@ -63,7 +73,7 @@ class AutomationBridgeImpl implements AutomationBridge {
     resolveFocusedId,
   }: CreateAutomationBridgeOptions) {
     this.target = target ?? window;
-    this.readFocusPath = getFocusPath ?? getFocusPathFromCore;
+    this.readFocusPath = getFocusPath ?? defaultGetFocusPath;
     this.resolvePageName = resolvePageName ?? (() => null);
     this.resolveFocusedId = resolveFocusedId;
   }
@@ -84,13 +94,19 @@ class AutomationBridgeImpl implements AutomationBridge {
       isPlaying: false,
     };
     this.flags = flags;
-    this.target[GLOBAL_AUTOMATION_KEY] = new Proxy(flags, {
-      get: (targetFlags, prop: string | symbol): unknown => {
-        if (prop === 'focusPath') return this.getSerializedFocusPath();
-        if (prop === 'focusedElement') return this.resolveFocusedElement();
-        return targetFlags[prop as keyof AutomationFlags];
-      },
+
+    Object.defineProperty(flags, 'focusPath', {
+      get: () => this.getSerializedFocusPath(),
+      enumerable: true,
+      configurable: true,
     });
+    Object.defineProperty(flags, 'focusedElement', {
+      get: () => this.resolveFocusedElement(),
+      enumerable: true,
+      configurable: true,
+    });
+
+    this.target[GLOBAL_AUTOMATION_KEY] = flags;
   }
 
   stop(): void {
