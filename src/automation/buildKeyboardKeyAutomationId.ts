@@ -49,5 +49,5 @@ export const buildKeyboardKeyAutomationId = (
     }
     return `keyboardkey-${trimmed.toLowerCase().replaceAll(WHITESPACE_RUNS, '-')}`;
   }
-  return `KeyboardKey-${label}-${Math.round(x)}-${Math.round(y)}`;
+  return `keyboardkey-${label}-${Math.round(x)}-${Math.round(y)}`;
 };

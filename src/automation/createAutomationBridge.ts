@@ -1,6 +1,8 @@
 import type { ElementNode } from '../core/index.js';
 import { getElementType } from './elementType.js';
-import { findInAncestors, getFocusHostMetadata } from './focusHostMetadata.js';
+import { getFocusHostMetadata } from './focusHostMetadata.js';
+import { getNonEmptyString } from './stringUtils.js';
+import { findInAncestors } from './traversal.js';
 import type {
   AutomationBridge,
   AutomationFlags,
@@ -21,12 +23,6 @@ function defaultGetFocusPath(): ElementNode[] {
 }
 
 const GLOBAL_AUTOMATION_KEY = '__lightningAutomation';
-
-const getNonEmptyString = (value: unknown): string | undefined => {
-  if (typeof value !== 'string') return undefined;
-  const normalized = value.trim();
-  return normalized.length > 0 ? normalized : undefined;
-};
 
 const getNodeVisualText = (node: ElementNode): string | undefined => {
   const own = getNonEmptyString(node.text);

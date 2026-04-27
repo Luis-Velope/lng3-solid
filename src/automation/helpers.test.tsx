@@ -7,26 +7,11 @@ import { AutomationText } from './AutomationText.jsx';
 import { buildKeyboardKeyAutomationId } from './buildKeyboardKeyAutomationId.js';
 import { getElementType, setElementType } from './elementType.js';
 import {
-  findInAncestors,
   getFocusHostMetadata,
   setFocusHostMetadata,
 } from './focusHostMetadata.js';
-
-const createNode = (
-  overrides: Record<string, unknown> = {},
-): ElementNode => {
-  const node: Partial<ElementNode> & Record<string, unknown> = {
-    id: undefined,
-    x: 0,
-    y: 0,
-    w: 0,
-    h: 0,
-    children: [],
-    parent: undefined,
-    ...overrides,
-  };
-  return node as ElementNode;
-};
+import { createNode } from './testing.js';
+import { findInAncestors } from './traversal.js';
 
 describe('automation helpers', () => {
   it('stores and reads element type via WeakMap', () => {
@@ -68,7 +53,7 @@ describe('automation helpers', () => {
     expect(buildKeyboardKeyAutomationId('@', 0, 0)).toBe('keyboardkey-at');
     expect(buildKeyboardKeyAutomationId('Ab C', 0, 0)).toBe('keyboardkey-ab-c');
     expect(buildKeyboardKeyAutomationId('   ', 10.3, 29.7)).toBe(
-      'KeyboardKey-   -10-30',
+      'keyboardkey-   -10-30',
     );
   });
 

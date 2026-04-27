@@ -62,16 +62,12 @@ expect(flags?.focusedElement?.id).toBe('PlayButton');
 
 ## Text resolution behavior
 
-For focused-node text/label, the bridge resolves values in this order:
+For the focused node, the bridge resolves fields independently:
 
-1. `announce` (string only)
-2. `title` (string only)
-3. `node.text`
-4. first child `.text`
-5. `selectedNode` text
-6. focus-host metadata `label`
+- `text`: `node.text` -> first child `.text` -> `selectedNode` text -> semantic label (`announce` -> `title` -> `label`) -> focus-host metadata `label`
+- `label`: semantic label (`announce` -> `title` -> `label`) -> `node.text` -> first child `.text` -> `selectedNode` text -> focus-host metadata `label`
 
-Apps that do not use `announce`/`title` still work via visual-text fallbacks.
+For non-focused nodes in `focusPath`, metadata fallback is not applied.
 
 ## Lifecycle and cleanup
 
